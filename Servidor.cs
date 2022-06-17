@@ -16,24 +16,32 @@ namespace ImpressaoEtiquetasControlCenter
 
         public Servidor()
         {
-            IniciarServidor();
+            try
+            {
+                IniciarServidor();
+            }
+            catch(Exception Ex)
+            {
+                throw Ex;
+            }
+             
         }
 
         public void IniciarServidor()
         {
             try
             {
-                if (servidor != null)
+                if (servidor == null)
                 {
                     servidor = new SimpleTcpServer(Ip());
                     servidor.Events.DataReceived += RecebimentoDeDados;
-                    servidor.Start();
+                    servidor.Start(); using (new Log("Servidor Iniciado")) ;
                 }
             }
             catch (Exception Ex)
             {
-                using (new Log(Ex.ToString()));
                 servidor.Dispose();
+                throw Ex;
             }
 
         }
@@ -47,11 +55,12 @@ namespace ImpressaoEtiquetasControlCenter
                 if (Dados.Contains("ImagemEtiqueta"))
                 {
                     using (new Impressao(Dados));
+                    
                 }
             }
             catch(Exception Ex)
             {
-                using (new Log(Ex.ToString())) ;
+                throw Ex;
             }
         }
 
@@ -77,9 +86,17 @@ namespace ImpressaoEtiquetasControlCenter
             }
             catch (Exception)
             {
-                string nomeMaquina = Dns.GetHostName();
-                IPAddress[] ipLocal = Dns.GetHostAddresses(nomeMaquina);
-                IP = ipLocal.LastOrDefault().ToString();
+                try
+                {
+                    string nomeMaquina = Dns.GetHostName();
+                    IPAddress[] ipLocal = Dns.GetHostAddresses(nomeMaquina);
+                    IP = ipLocal.LastOrDefault().ToString();
+                }
+                catch(Exception Ex)
+                {
+                    throw Ex;
+                }
+               
             }
 
             IP += ":3900";

@@ -7,7 +7,7 @@ namespace ImpressaoEtiquetasControlCenter
     {
         public static string StringConexao = string.Empty;       
 
-        private string LocalArquivoString = @"C:\LanSolutions\ControlCenter\ControlCenter.ini";
+        private string LocalArquivoString = @"C:\LanSolutions\ServidorDeImpressao\ImpressaoEtiquetasControlCenter.ini";
 
         // LayoutString = "Server=127.0.0.1;Port=5432;Database=myDataBase;User Id=myUsername;Password=myPassword;";
         public BancoPostGres()
@@ -42,7 +42,7 @@ namespace ImpressaoEtiquetasControlCenter
             }
             catch (Exception Ex)
             {
-                using (new Log(Ex.ToString())) ;
+                throw new Exception(Ex.ToString());
             }
         }
     }

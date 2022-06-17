@@ -1,12 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Diagnostics;
-using System.Linq;
 using System.ServiceProcess;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ImpressaoEtiquetasControlCenter
 {
@@ -19,12 +12,22 @@ namespace ImpressaoEtiquetasControlCenter
 
         protected override void OnStart(string[] args)
         {
-            new BancoPostGres();
-            new Servidor();
+            try
+            {
+                new BancoPostGres();
+                new Servidor();
+
+            }
+            catch(Exception Ex)
+            {
+                using (new Log(Ex.ToString())) ;
+            }
+          
         }
 
         protected override void OnStop()
         {
+            using (new Log("Servidor Parado")) ;                
             this.Dispose();
         }
     }

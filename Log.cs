@@ -24,8 +24,7 @@ namespace ImpressaoEtiquetasControlCenter
                
             }
         }
-
-
+        
         private void LogTxt(string Log)
         {
             if (!Directory.Exists(@"C:\LanSolutions\ServidorDeImpressao\Logs\"))
