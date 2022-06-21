@@ -15,7 +15,7 @@ namespace ImpressaoEtiquetasControlCenter
             try
             {
                 new BancoPostGres();
-                new Servidor();
+                Servidor.IniciarServidor();
 
             }
             catch(Exception Ex)

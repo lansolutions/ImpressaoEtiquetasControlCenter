@@ -9,63 +9,49 @@ using SuperSimpleTcp;
 
 namespace ImpressaoEtiquetasControlCenter
 {
-    public class Servidor : IDisposable
+    public class Servidor
     {
         static SimpleTcpServer servidor;
-        private bool disposedValue;
 
-        public Servidor()
-        {
-            try
-            {
-                IniciarServidor();
-            }
-            catch(Exception Ex)
-            {
-                throw Ex;
-            }
-             
-        }
-
-        public void IniciarServidor()
+        
+        public static void IniciarServidor()
         {
             try
             {
                 if (servidor == null)
                 {
-                    servidor = new SimpleTcpServer(Ip());
-                    servidor.Events.DataReceived += RecebimentoDeDados;
-                    servidor.Start(); using (new Log("Servidor Iniciado")) ;
+                    servidor = new SimpleTcpServer(Ip());                    
                 }
+
+                servidor.Events.DataReceived += RecebimentoDeDados;
+                servidor.Start(); new Log("Servidor Iniciado");
             }
             catch (Exception Ex)
             {
                 servidor.Dispose();
-                throw Ex;
+                using (new Log(Ex.ToString())) ;
             }
 
         }
         
-        private void RecebimentoDeDados(object sender, DataReceivedEventArgs e)
+        private static void RecebimentoDeDados(object sender, DataReceivedEventArgs e)
         {
             try
             {
                 string Dados = Encoding.UTF8.GetString(e.Data);
 
                 if (Dados.Contains("ImagemEtiqueta"))
-                {
-                    using (new Impressao(Dados));
-                    
+                {       
+                    Impressao.Imprimir(Dados);
                 }
             }
             catch(Exception Ex)
             {
-                throw Ex;
+                using (new Log(Ex.ToString())) ;
             }
         }
-
         
-        private string Ip()
+        private static string Ip()
         {
             string IP = string.Empty;
             try
@@ -102,34 +88,6 @@ namespace ImpressaoEtiquetasControlCenter
             IP += ":3900";
             return IP;
         }
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!disposedValue)
-            {
-                if (disposing)
-                {
-                    // TODO: dispose managed state (managed objects)
-                }
-
-                // TODO: free unmanaged resources (unmanaged objects) and override finalizer
-                // TODO: set large fields to null
-                disposedValue = true;
-            }
-        }
-
-        // // TODO: override finalizer only if 'Dispose(bool disposing)' has code to free unmanaged resources
-        // ~Servidor()
-        // {
-        //     // Não altere este código. Coloque o código de limpeza no método 'Dispose(bool disposing)'
-        //     Dispose(disposing: false);
-        // }
-
-        public void Dispose()
-        {
-            // Não altere este código. Coloque o código de limpeza no método 'Dispose(bool disposing)'
-            Dispose(disposing: true);
-            GC.SuppressFinalize(this);
-        }
+     
     }
 }
